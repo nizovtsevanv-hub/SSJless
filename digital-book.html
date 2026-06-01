@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Manifold English Starter Book — Digital</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #f8fafc;
+      --page: #ffffff;
+      --blue: #1e40af;
+      --blue-light: #dbeafe;
+      --green: #16a34a;
+      --green-soft: #dcfce7;
+      --yellow: #fef3c7;
+      --text: #334155;
+      --border: #bfdbfe;
+      --shadow: 0 8px 32px rgba(30, 64, 175, 0.12);
+    }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "Segoe UI", Inter, Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3 { color: var(--blue); line-height: 1.25; }
+    h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.5rem; }
+    h2 { font-size: clamp(1.25rem, 2.5vw, 1.65rem); margin: 0 0 0.75rem; }
+    h3 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+    .ru { color: #475569; font-size: 0.95em; }
+    .ipa { color: #64748b; font-family: "Segoe UI", sans-serif; }
+
+    /* Shell */
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0.75rem;
+    }
+    .top-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 0.75rem; max-width: 1200px; width: 100%; margin: 0 auto 0.75rem;
+    }
+    .brand { font-size: 0.85rem; font-weight: 700; color: var(--blue); }
+    .progress-wrap { flex: 1; min-width: 140px; max-width: 320px; }
+    .progress-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.2rem; }
+    .progress-bar {
+      height: 8px; background: var(--blue-light); border-radius: 999px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; background: var(--blue); width: 0%; transition: width 0.35s;
+    }
+    .page-indicator { font-size: 0.9rem; font-weight: 600; color: var(--blue); white-space: nowrap; }
+
+    .layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    @media (min-width: 960px) {
+      .layout { grid-template-columns: 220px 1fr; align-items: start; }
+    }
+
+    /* TOC */
+    .toc-panel {
+      background: var(--page);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .toc-panel h2 { font-size: 1rem; margin: 0 0 0.75rem; }
+    .toc-list { list-style: none; margin: 0; padding: 0; }
+    .toc-list li { margin-bottom: 0.25rem; }
+    .toc-btn {
+      width: 100%; text-align: left; padding: 0.45rem 0.6rem;
+      border: none; background: transparent; font: inherit; font-size: 0.82rem;
+      color: var(--text); border-radius: 0.5rem; cursor: pointer;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .toc-btn:hover { background: var(--blue-light); color: var(--blue); }
+    .toc-btn.active { background: var(--blue); color: #fff; font-weight: 600; }
+    .toc-btn.done::after {
+      content: "✓"; margin-left: auto; color: var(--green); font-size: 0.75rem;
+    }
+    .toc-btn.active.done::after { color: #bbf7d0; }
+
+    /* Book */
+    .book-stage {
+      perspective: 2200px;
+      display: flex; justify-content: center; align-items: stretch;
+      min-height: 520px;
+    }
+    .book {
+      position: relative;
+      width: 100%;
+      max-width: 920px;
+      min-height: 520px;
+    }
+    .spread {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      width: 100%;
+      transition: opacity 0.35s, transform 0.45s;
+    }
+    @media (min-width: 768px) {
+      .spread.has-pair { grid-template-columns: 1fr 1fr; }
+      .spread.single { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
+    }
+    .spread.flipping-out {
+      opacity: 0;
+      transform: rotateY(-8deg) scale(0.98);
+    }
+    .spread.flipping-in {
+      animation: spreadIn 0.45s ease forwards;
+    }
+    @keyframes spreadIn {
+      from { opacity: 0; transform: rotateY(8deg) scale(0.98); }
+      to { opacity: 1; transform: rotateY(0) scale(1); }
+    }
+
+    .book-page {
+      background: var(--page);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      padding: 1.25rem 1.35rem;
+      min-height: 480px;
+      overflow-y: auto;
+      max-height: 78vh;
+    }
+    .book-page.cover-page {
+      display: flex; flex-direction: column; justify-content: center;
+      text-align: center; background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    }
+    .badge {
+      display: inline-block; padding: 0.35rem 0.85rem; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--blue); background: var(--blue-light);
+      border: 1px solid var(--border); margin-bottom: 1rem;
+    }
+    .cover-sub { font-size: 1.05rem; color: #475569; margin: 0.25rem 0; }
+    .micro-goal {
+      margin-top: 1.25rem; padding: 1rem; background: var(--yellow);
+      border: 1px solid #fde68a; border-radius: 0.75rem; text-align: left;
+      font-size: 0.95rem;
+    }
+    .micro-goal ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+
+    /* Nav buttons */
+    .nav-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+      gap: 0.75rem; margin-top: 1rem; max-width: 920px; width: 100%;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
+      padding: 0.6rem 1.15rem; border-radius: 0.65rem;
+      border: 1px solid var(--border); background: #fff;
+      color: var(--blue); font: inherit; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+    }
+    .btn:hover { background: var(--blue-light); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-green { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-listen { font-size: 0.85rem; padding: 0.4rem 0.75rem; }
+
+    /* Diagram — PNG only, object-fit contain, no crop/stretch */
+    .diagram-wrap {
+      position: relative; margin: 0.75rem 0; border-radius: 0.75rem;
+      border: 1px solid #e2e8f0; background: #fff; min-height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.5rem; overflow: hidden;
+    }
+    .diagram-wrap img.manifold-photo {
+      display: none;
+      width: 100%; height: auto; max-height: 280px;
+      object-fit: contain; object-position: center;
+      margin: 0 auto;
+    }
+    .diagram-wrap img.manifold-photo.is-loaded { display: block; }
+    .diagram-wrap.is-loading .img-placeholder { display: none; }
+    .img-placeholder {
+      display: none; min-height: 180px; flex-direction: column;
+      align-items: center; justify-content: center; padding: 1.5rem;
+      background: #f1f5f9; border: 2px dashed var(--border);
+      color: var(--blue); text-align: center; font-size: 0.95rem; line-height: 1.5;
+      max-width: 100%;
+    }
+    .img-placeholder.visible { display: flex; }
+    .img-placeholder strong { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .img-placeholder code {
+      font-size: 0.85rem; background: #e2e8f0; padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem; word-break: break-all;
+    }
+    .flow-labels {
+      display: flex; justify-content: space-around; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 0.5rem; font-weight: 700; font-size: 0.9rem;
+    }
+    .flow-labels span { color: var(--green); }
+    .flow-arrow { color: var(--green); }
+
+    /* Vocab */
+    .vocab-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.5rem;
+    }
+    .vocab-chip {
+      padding: 0.65rem 0.75rem; border-radius: 0.65rem;
+      border: 1px solid var(--border); background: #f8fafc;
+      cursor: pointer; text-align: center; font-weight: 700; color: var(--blue);
+      transition: box-shadow 0.2s, background 0.2s;
+    }
+    .vocab-chip:hover { background: var(--blue-light); box-shadow: 0 2px 8px rgba(30,64,175,0.15); }
+    .vocab-chip.bonus { border-style: dashed; }
+
+    /* Modal card */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
+      z-index: 100; display: none; align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .overlay.open { display: flex; }
+    .vocab-card {
+      background: #fff; border-radius: 1rem; border: 1px solid var(--border);
+      max-width: 420px; width: 100%; padding: 1.5rem; box-shadow: var(--shadow);
+      position: relative;
+    }
+    .vocab-card .close-btn {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      border: none; background: #f1f5f9; width: 2rem; height: 2rem;
+      border-radius: 50%; cursor: pointer; font-size: 1.1rem; color: #64748b;
+    }
+    .vocab-card h3 { margin: 0; font-size: 1.5rem; color: #0f172a; }
+    .card-field { margin-top: 0.75rem; }
+    .card-label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--blue);
+    }
+
+    /* Rule */
+    .rule-hidden {
+      padding: 1.25rem; background: #f1f5f9; border-radius: 0.75rem;
+      text-align: center; color: #64748b; border: 1px dashed #cbd5e1;
+    }
+    .rule-revealed {
+      display: none; padding: 1rem; background: var(--yellow);
+      border: 1px solid #fde68a; border-radius: 0.75rem;
+    }
+    .rule-revealed.visible { display: block; }
+    .formula {
+      margin: 0.75rem 0; padding: 0.75rem; background: #fff;
+      border-radius: 0.5rem; font-weight: 700; font-size: 1.05rem;
+      border-left: 4px solid var(--blue);
+    }
+    .formula-focus {
+      display: inline-block; margin-top: 0.5rem; padding: 0.35rem 0.65rem;
+      background: var(--blue); color: #fff; border-radius: 0.4rem;
+    }
+
+    /* Examples */
+    .example-btns { display: flex; flex-direction: column; gap: 0.5rem; }
+    .example-btn {
+      text-align: left; padding: 0.75rem 1rem; border-radius: 0.65rem;
+      border: 1px solid var(--border); background: #fff;
+      font: inherit; font-size: 1rem; cursor: pointer; transition: all 0.2s;
+    }
+    .example-btn:hover { background: var(--blue-light); }
+    .example-btn.active {
+      border-color: var(--green); background: var(--green-soft);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+    }
+    .example-btn .hl { font-weight: 700; color: var(--blue); }
+    .example-btn.active .hl { color: var(--green); }
+    .example-hint {
+      margin-top: 0.5rem; font-size: 0.9rem; color: var(--green); font-weight: 600;
+      min-height: 1.4em;
+    }
+
+    /* Workbook */
+    .exercise { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
+    .exercise:last-child { border-bottom: none; }
+    .exercise h4 { margin: 0 0 0.65rem; font-size: 1rem; color: var(--blue); }
+    .q-row { margin: 0.5rem 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+    .q-row label { cursor: pointer; }
+    .word-bank {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0;
+    }
+    .word-token {
+      padding: 0.4rem 0.65rem; border-radius: 0.5rem;
+      border: 1px solid var(--border); background: var(--blue-light);
+      color: var(--blue); font-weight: 600; cursor: pointer; user-select: none;
+    }
+    .word-token.used { opacity: 0.35; pointer-events: none; }
+    .sentence-slot {
+      min-height: 2.5rem; padding: 0.5rem; border: 2px dashed #cbd5e1;
+      border-radius: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.35rem;
+      margin: 0.35rem 0;
+    }
+    .match-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    }
+    @media (max-width: 500px) { .match-grid { grid-template-columns: 1fr; } }
+    .match-item {
+      padding: 0.55rem 0.7rem; border: 1px solid var(--border); border-radius: 0.5rem;
+      cursor: pointer; background: #fff; font-size: 0.9rem;
+    }
+    .match-item.selected { border-color: var(--blue); background: var(--blue-light); }
+    .match-item.matched { border-color: var(--green); background: var(--green-soft); pointer-events: none; }
+    .gap-input {
+      font: inherit; font-size: 1rem; padding: 0.35rem 0.5rem;
+      border: none; border-bottom: 2px solid var(--blue); min-width: 5rem;
+      background: transparent;
+    }
+    .feedback {
+      margin-top: 0.35rem; font-size: 0.9rem; font-weight: 600; min-height: 1.2em;
+    }
+    .feedback.ok { color: var(--green); }
+    .feedback.err { color: #dc2626; }
+
+    /* Sound */
+    .sound-panel {
+      padding: 1rem; background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 0.75rem; margin-top: 0.75rem;
+    }
+    .sound-big { font-size: 2rem; font-weight: 700; color: var(--blue); }
+    .thumb-guide {
+      margin: 0.75rem 0; padding: 0.75rem; background: #fff;
+      border-radius: 0.5rem; border-left: 4px solid var(--blue);
+    }
+    .thumb-guide li { margin: 0.35rem 0; }
+
+    /* Speaking */
+    .speak-timer {
+      font-size: 1.25rem; font-weight: 700; color: var(--blue);
+      padding: 0.5rem 1rem; background: var(--blue-light);
+      border-radius: 0.5rem; display: inline-block;
+    }
+    .speak-feedback {
+      margin-top: 0.75rem; padding: 0.75rem; background: var(--green-soft);
+      border: 1px solid #86efac; border-radius: 0.5rem; color: #166534;
+      display: none;
+    }
+    .speak-feedback.visible { display: block; }
+
+    /* Done */
+    .done-box {
+      padding: 1rem; background: var(--green-soft); border: 1px solid #86efac;
+      border-radius: 0.75rem; color: #14532d;
+    }
+    .done-list { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+    .teaser {
+      margin-top: 1rem; padding: 0.85rem; border: 1px dashed var(--border);
+      border-radius: 0.65rem; background: #f8fafc;
+    }
+
+    .steps-list { margin: 0; padding-left: 1.25rem; }
+    .steps-list li { margin: 0.4rem 0; }
+
+    .keyboard-hint {
+      text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem;
+    }
+
+    @media (max-width: 959px) {
+      .toc-panel { order: 2; }
+      .book-area { order: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="top-bar">
+      <span class="brand">Fuel Manifold English Starter Book</span>
+      <div class="progress-wrap">
+        <div class="progress-label">Lesson progress</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <span class="page-indicator" id="pageIndicator">Cover</span>
+    </div>
+
+    <div class="layout">
+      <aside class="toc-panel book-area">
+        <h2>Contents</h2>
+        <ul class="toc-list" id="tocList"></ul>
+      </aside>
+
+      <main>
+        <div class="book-stage">
+          <div class="book" id="book">
+            <div class="spread single" id="spread"></div>
+          </div>
+        </div>
+        <div class="nav-bar">
+          <button type="button" class="btn" id="btnPrev" aria-label="Previous page">← Previous</button>
+          <button type="button" class="btn btn-primary" id="btnNext" aria-label="Next page">Next →</button>
+        </div>
+        <p class="keyboard-hint">Use ← → arrow keys to turn pages</p>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="vocabOverlay" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+    <div class="vocab-card">
+      <button type="button" class="close-btn" id="closeVocab" aria-label="Close">×</button>
+      <h3 id="cardTitle"></h3>
+      <div class="card-field"><div class="card-label">British IPA</div><div id="cardIpa" class="ipa"></div></div>
+      <div class="card-field"><div class="card-label">Russian</div><div id="cardRu"></div></div>
+      <div class="card-field"><div class="card-label">Meaning</div><div id="cardMeaning"></div></div>
+      <div class="card-field"><div class="card-label">Example</div><div id="cardExample"></div></div>
+      <button type="button" class="btn btn-listen" id="cardListen">Listen</button>
+    </div>
+  </div>
+
+  <template id="pageTemplates"></template>
+
+  <script>
+(function () {
+  "use strict";
+
+  const PAGE_TITLES = [
+    "Cover", "How to use", "Look", "Vocabulary", "Rule Card", "Visual Examples",
+    "Workbook", "Quick Check", "Speaking", "Sound Focus /θ/", "Teacher Notes", "Review / Done"
+  ];
+
+  const VOCAB = {
+    fuel: { en: "Fuel", ipa: "/ˈfjuːəl/", ru: "топливо", meaning: "Liquid that powers the engine.", example: "Fuel goes in." },
+    inlet: { en: "Inlet", ipa: "/ˈɪnlet/", ru: "вход", meaning: "Where fuel enters.", example: "Fuel enters here." },
+    outlet: { en: "Outlet", ipa: "/ˈaʊtlet/", ru: "выход", meaning: "Where fuel leaves.", example: "Fuel goes out." },
+    seal: { en: "Seal", ipa: "/siːl/", ru: "уплотнение", meaning: "Stops leaks.", example: "The seal stops leaks." },
+    body: { en: "Body", ipa: "/ˈbɒdi/", ru: "корпус", meaning: "Main housing of the part.", example: "The body holds the fuel path." },
+    line: { en: "Line", ipa: "/laɪn/", ru: "магистраль / линия", meaning: "Pipe or channel for fuel.", example: "The line carries fuel." },
+    manifold: { en: "Manifold", ipa: "/ˈmænɪfəʊld/", ru: "коллектор", meaning: "Connects several lines.", example: "The manifold connects the lines." }
+  };
+
+  const STORAGE = {
+    page: "fmBook_lastPage",
+    completed: "fmBook_lessonComplete",
+    speaking: "fmBook_speakingDone",
+    pagesDone: "fmBook_pagesVisited"
+  };
+
+  let spreadIndex = 0;
+  let flipping = false;
+  let matchSelected = null;
+  let speakInterval = null;
+  let speakSeconds = 20;
+
+  const spreads = [
+    { single: true, pages: [0] },
+    { single: false, pages: [1, 2] },
+    { single: false, pages: [3, 4] },
+    { single: false, pages: [5, 6] },
+    { single: false, pages: [7, 8] },
+    { single: false, pages: [9, 10] },
+    { single: true, pages: [11] }
+  ];
+
+  const mobilePages = Array.from({ length: 12 }, (_, i) => i);
+  let isMobile = window.matchMedia("(max-width: 767px)").matches;
+  let mobilePage = 0;
+
+  function getVisited() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE.pagesDone) || "[]");
+    } catch { return []; }
+  }
+  function setVisited(ids) {
+    localStorage.setItem(STORAGE.pagesDone, JSON.stringify(ids));
+  }
+  function markPageVisited(id) {
+    const v = getVisited();
+    if (!v.includes(id)) { v.push(id); setVisited(v); }
+    updateTocDone();
+  }
+
+  const MANIFOLD_PRIMARY = "public/images/fuel-manifold-cutaway-master.png";
+  const MANIFOLD_FALLBACK = "images/fuel-manifold-cutaway-master.png";
+
+  function imgHtml() {
+    return `<div class="diagram-wrap is-loading" data-manifold-diagram>
+      <img class="manifold-photo" alt="Fuel manifold cutaway illustration" decoding="async">
+      <div class="img-placeholder" data-placeholder hidden>
+        <strong>Fuel Manifold illustration not found.</strong>
+        <span>Please place <code>fuel-manifold-cutaway-master.png</code> into <code>public/images/</code>.</span>
+      </div>
+    </div>`;
+  }
+
+  function loadManifoldDiagram(wrap) {
+    if (!wrap || wrap.dataset.manifoldReady) return;
+    const img = wrap.querySelector(".manifold-photo");
+    const ph = wrap.querySelector("[data-placeholder]");
+    if (!img) return;
+
+    function showLoaded(src) {
+      img.src = src;
+      img.classList.add("is-loaded");
+      wrap.classList.remove("is-loading");
+      if (ph) { ph.hidden = true; ph.classList.remove("visible"); }
+    }
+
+    function showMissing() {
+      wrap.classList.remove("is-loading");
+      img.classList.remove("is-loaded");
+      img.removeAttribute("src");
+      if (ph) { ph.hidden = false; ph.classList.add("visible"); }
+    }
+
+    function tryPath(path, thenFallback) {
+      const probe = new Image();
+      probe.onload = function () { showLoaded(path); wrap.dataset.manifoldReady = "1"; };
+      probe.onerror = function () {
+        if (thenFallback) tryPath(MANIFOLD_FALLBACK, false);
+        else showMissing();
+      };
+      probe.src = path;
+    }
+
+    tryPath(MANIFOLD_PRIMARY, true);
+  }
+
+  function initAllManifoldDiagrams(root) {
+    (root || document).querySelectorAll("[data-manifold-diagram]").forEach(loadManifoldDiagram);
+  }
+
+  function buildPages() {
+    return [
+      /* 0 Cover */
+      `<div class="book-page cover-page" data-page-id="0">
+        <span class="badge">Lesson 1</span>
+        <h1>Fuel Manifold English Starter Book</h1>
+        <p class="cover-sub">Visual Technical English for Beginners</p>
+        <p class="cover-sub ru">Визуальный технический английский с нуля</p>
+        <p style="margin-top:1.5rem;font-weight:700;color:var(--blue)">Fuel Manifold + Present Simple</p>
+        <div class="micro-goal">
+          <strong>Today’s micro-goal:</strong>
+          <ul>
+            <li>Learn 6 words.</li>
+            <li>Understand 1 rule.</li>
+            <li>Say 3 short technical sentences.</li>
+          </ul>
+        </div>
+      </div>`,
+
+      /* 1 How to use */
+      `<div class="book-page" data-page-id="1">
+        <h2>How to use this book</h2>
+        <ol class="steps-list">
+          <li>Look at the picture.</li>
+          <li>Click or read the word.</li>
+          <li>Listen and repeat.</li>
+          <li>Read the rule.</li>
+          <li>Build short sentences.</li>
+          <li>Check yourself.</li>
+          <li>Say 3 sentences aloud.</li>
+        </ol>
+        <p class="ru" style="margin-top:1rem"><strong>Russian:</strong></p>
+        <ol class="steps-list ru">
+          <li>Посмотрите на картинку.</li>
+          <li>Прочитайте слово.</li>
+          <li>Послушайте и повторите.</li>
+          <li>Разберите правило.</li>
+          <li>Соберите короткие предложения.</li>
+          <li>Проверьте себя.</li>
+          <li>Скажите 3 фразы вслух.</li>
+        </ol>
+      </div>`,
+
+      /* 2 Look */
+      `<div class="book-page" data-page-id="2">
+        <h2>Look at the component</h2>
+        ${imgHtml()}
+        <p><strong>This is a fuel manifold.</strong><br>
+        Fuel goes in.<br>
+        Fuel goes through the body.<br>
+        Fuel goes out.</p>
+        <p class="ru">Это топливный коллектор. Топливо входит. Топливо проходит через корпус. Топливо выходит.</p>
+        <div class="flow-labels">
+          <span>Fuel in <span class="flow-arrow">→</span></span>
+          <span>Through <span class="flow-arrow">→</span></span>
+          <span>Fuel out</span>
+        </div>
+      </div>`,
+
+      /* 3 Vocabulary */
+      `<div class="book-page" data-page-id="3">
+        <h2>Vocabulary</h2>
+        <p>Click a word to open the card.</p>
+        <div class="vocab-grid">
+          <button type="button" class="vocab-chip" data-vocab="fuel">Fuel</button>
+          <button type="button" class="vocab-chip" data-vocab="inlet">Inlet</button>
+          <button type="button" class="vocab-chip" data-vocab="outlet">Outlet</button>
+          <button type="button" class="vocab-chip" data-vocab="seal">Seal</button>
+          <button type="button" class="vocab-chip" data-vocab="body">Body</button>
+          <button type="button" class="vocab-chip" data-vocab="line">Line</button>
+          <button type="button" class="vocab-chip bonus" data-vocab="manifold">Manifold (bonus)</button>
+        </div>
+      </div>`,
+
+      /* 4 Rule */
+      `<div class="book-page" data-page-id="4">
+        <h2>Present Simple: facts and functions</h2>
+        <p class="ru">Present Simple: факты и функции</p>
+        <div class="rule-hidden" id="ruleHidden">Click the button to reveal the rule.</div>
+        <div class="rule-revealed" id="ruleRevealed">
+          <p><strong>We use Present Simple to say what a part does.</strong></p>
+          <p class="ru">Используем Present Simple, чтобы сказать, что делает деталь.</p>
+          <div class="formula">
+            I / You / We / They + verb<br>
+            He / She / It + verb + <strong>-s</strong>
+          </div>
+          <span class="formula-focus">it → verb + -s</span>
+          <ul style="margin-top:1rem">
+            <li>Fuel goes in. / Топливо входит.</li>
+            <li>Fuel goes out. / Топливо выходит.</li>
+            <li>The seal stops leaks. / Уплотнение предотвращает утечки.</li>
+            <li>The line carries fuel. / Линия проводит топливо.</li>
+            <li>The manifold connects the lines. / Коллектор соединяет линии.</li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-primary" id="btnShowRule" style="margin-top:0.75rem">Show rule</button>
+      </div>`,
+
+      /* 5 Examples */
+      `<div class="book-page" data-page-id="5">
+        <h2>Visual Examples</h2>
+        <p>Click each sentence. Watch the highlight.</p>
+        <div class="example-btns" id="exampleBtns">
+          <button type="button" class="example-btn" data-part="inlet">1. Fuel goes <span class="hl">in</span>.</button>
+          <button type="button" class="example-btn" data-part="body">2. Fuel goes <span class="hl">through the body</span>.</button>
+          <button type="button" class="example-btn" data-part="outlet">3. Fuel goes <span class="hl">out</span>.</button>
+          <button type="button" class="example-btn" data-part="seal">4. The <span class="hl">seal</span> stops leaks.</button>
+          <button type="button" class="example-btn" data-part="line">5. The <span class="hl">line</span> carries fuel.</button>
+        </div>
+        <p class="example-hint" id="exampleHint"></p>
+        ${imgHtml()}
+      </div>`,
+
+      /* 6 Workbook */
+      `<div class="book-page" data-page-id="6">
+        <h2>Workbook</h2>
+        <div class="exercise" data-ex="1">
+          <h4>Exercise 1 — Choose the correct form</h4>
+          <div class="q-row" data-q="1">1. Fuel <label><input type="radio" name="q1" value="go"> go</label> / <label><input type="radio" name="q1" value="goes"> goes</label> in.</div>
+          <div class="q-row" data-q="2">2. Fuel <label><input type="radio" name="q2" value="go"> go</label> / <label><input type="radio" name="q2" value="goes"> goes</label> out.</div>
+          <div class="q-row" data-q="3">3. The seal <label><input type="radio" name="q3" value="stop"> stop</label> / <label><input type="radio" name="q3" value="stops"> stops</label> leaks.</div>
+          <div class="q-row" data-q="4">4. The line <label><input type="radio" name="q4" value="carry"> carry</label> / <label><input type="radio" name="q4" value="carries"> carries</label> fuel.</div>
+          <div class="q-row" data-q="5">5. The manifold <label><input type="radio" name="q5" value="connect"> connect</label> / <label><input type="radio" name="q5" value="connects"> connects</label> the lines.</div>
+          <button type="button" class="btn" data-check-ex1>Check Exercise 1</button>
+          <div class="feedback" data-fb-ex1></div>
+        </div>
+        <div class="exercise" data-ex="2">
+          <h4>Exercise 2 — Build the sentence</h4>
+          <p>Tap words in order (5 sentences).</p>
+          <div id="buildArea"></div>
+          <button type="button" class="btn" data-check-ex2>Check Exercise 2</button>
+          <div class="feedback" data-fb-ex2></div>
+        </div>
+        <div class="exercise" data-ex="3">
+          <h4>Exercise 3 — Match</h4>
+          <div class="match-grid" id="matchGrid"></div>
+          <div class="feedback" data-fb-ex3></div>
+        </div>
+        <div class="exercise" data-ex="4">
+          <h4>Exercise 4 — True or False</h4>
+          <div class="q-row">Fuel go in. <button type="button" class="btn" data-tf="1" data-val="false">True</button> <button type="button" class="btn" data-tf="1" data-val="true">False</button> <span class="feedback" data-tf-fb="1"></span></div>
+          <div class="q-row">The seal stops leaks. <button type="button" class="btn" data-tf="2" data-val="true">True</button> <button type="button" class="btn" data-tf="2" data-val="false">False</button> <span class="feedback" data-tf-fb="2"></span></div>
+          <div class="q-row">The line carry fuel. <button type="button" class="btn" data-tf="3" data-val="false">True</button> <button type="button" class="btn" data-tf="3" data-val="true">False</button> <span class="feedback" data-tf-fb="3"></span></div>
+        </div>
+        <div class="exercise" data-ex="5">
+          <h4>Exercise 5 — Fill the gap</h4>
+          <p>Fuel <input class="gap-input" id="gap1" placeholder="…"> in.</p>
+          <p>The seal <input class="gap-input" id="gap2" placeholder="…"> leaks.</p>
+          <button type="button" class="btn" data-check-gap>Check gaps</button>
+          <div class="feedback" data-fb-gap></div>
+        </div>
+      </div>`,
+
+      /* 7 Quick check */
+      `<div class="book-page" data-page-id="7">
+        <h2>Quick Check</h2>
+        <ol>
+          <li>What goes in? <em>(Fuel.)</em></li>
+          <li>Where does fuel enter? <em>(Through the inlet.)</em></li>
+          <li>What stops leaks? <em>(The seal.)</em></li>
+          <li>Fuel go / goes in? <label><input type="radio" name="qc4" value="go"> go</label> <label><input type="radio" name="qc4" value="goes"> goes</label></li>
+          <li>Say one sentence with “The seal”. <em>(The seal stops leaks.)</em></li>
+        </ol>
+        <button type="button" class="btn" data-check-qc>Check question 4</button>
+        <div class="feedback" data-fb-qc></div>
+      </div>`,
+
+      /* 8 Speaking */
+      `<div class="book-page" data-page-id="8">
+        <h2>Speaking</h2>
+        <p><strong>Say 3 sentences:</strong></p>
+        <ol>
+          <li>Fuel goes in.</li>
+          <li>Fuel goes out.</li>
+          <li>The seal stops leaks.</li>
+        </ol>
+        <p style="margin-top:1rem"><strong>Stronger version:</strong></p>
+        <p>Fuel goes in. Fuel goes through the body. Fuel goes out. The seal stops leaks.</p>
+        <div class="speak-controls" style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center">
+          <button type="button" class="btn btn-primary" id="btnSpeakStart">Start 20-second speaking task</button>
+          <span class="speak-timer" id="speakTimer" hidden>0:20</span>
+          <button type="button" class="btn btn-green" id="btnSpeakDone">I said it</button>
+        </div>
+        <div class="speak-feedback" id="speakFeedback">Good. You said the key sentences.</div>
+      </div>`,
+
+      /* 9 Sound */
+      `<div class="book-page" data-page-id="9">
+        <h2>British Sound Focus: /θ/</h2>
+        <div class="sound-panel">
+          <div class="sound-big">through</div>
+          <div class="ipa">/θruː/ — через / сквозь</div>
+          <ul class="thumb-guide">
+            <li>Put the tongue lightly between the teeth.</li>
+            <li>Blow air gently.</li>
+            <li>Do not say /s/ or /t/.</li>
+            <li>Say: through, through the inlet, fuel goes through.</li>
+          </ul>
+          <p class="ru">Звук /θ/ произносится с языком между зубами. Воздух проходит мягко. Не заменяйте его на /с/ или /т/.</p>
+          <p><strong>Practice:</strong> through · through the body · through the inlet · Fuel goes through the body.</p>
+          <button type="button" class="btn btn-listen" data-speak="through">Listen: through</button>
+          <button type="button" class="btn btn-listen" data-speak="Fuel goes through the body.">Listen: Fuel goes through the body.</button>
+        </div>
+        <p style="margin-top:0.75rem"><em>Repeat prompt:</em> Say each phrase 3 times slowly.</p>
+      </div>`,
+
+      /* 10 Teacher */
+      `<div class="book-page" data-page-id="10">
+        <h2>Teacher Notes</h2>
+        <p><strong>Lesson objective:</strong> Students learn 6 words and say 3 Present Simple sentences.</p>
+        <p><strong>10-minute flow:</strong></p>
+        <ol>
+          <li>Look at the object — 1 min</li>
+          <li>Learn 6 words — 3 min</li>
+          <li>Open Rule Card — 2 min</li>
+          <li>Do Workbook — 3 min</li>
+          <li>Say 3 sentences — 1 min</li>
+        </ol>
+        <p><strong>Teacher questions:</strong></p>
+        <ul>
+          <li>What does fuel do?</li>
+          <li>What does the seal do?</li>
+          <li>Where does fuel enter?</li>
+          <li>Where does fuel go out?</li>
+        </ul>
+        <p><strong>Expected answers:</strong> Fuel goes in. Fuel goes out. The seal stops leaks. Fuel enters through the inlet.</p>
+      </div>`,
+
+      /* 11 Done */
+      `<div class="book-page" data-page-id="11">
+        <h2>Lesson complete</h2>
+        <div class="done-box">
+          <p><strong>Now you can:</strong></p>
+          <ul class="done-list">
+            <li>name 6 parts or words;</li>
+            <li>use Present Simple for functions;</li>
+            <li>say 3 technical sentences;</li>
+            <li>pronounce through /θruː/.</li>
+          </ul>
+          <p style="margin-top:1rem"><strong>You can now say:</strong></p>
+          <ul class="done-list">
+            <li>Fuel goes in.</li>
+            <li>Fuel goes through the body.</li>
+            <li>The seal stops leaks.</li>
+          </ul>
+        </div>
+        <p style="margin-top:1rem"><strong>Final mini-task</strong> — write or say 3 sentences:</p>
+        <p>1. ____________________________</p>
+        <p>2. ____________________________</p>
+        <p>3. ____________________________</p>
+        <div class="teaser">
+          <strong>Next lesson:</strong> Fuel Pump Assembly /ˈfjuːəl pʌmp əˈsembli/<br>
+          <span class="ru">Узел топливного насоса</span><br>
+          <em>Coming next: How fuel moves from the tank to the line.</em>
+        </div>
+        <button type="button" class="btn btn-green" id="btnMarkComplete" style="margin-top:1rem">Mark lesson complete</button>
+        <p class="feedback" id="completeMsg"></p>
+      </div>`
+    ];
+  }
+
+  const allPages = buildPages();
+  const spreadEl = document.getElementById("spread");
+  const tocList = document.getElementById("tocList");
+  const progressFill = document.getElementById("progressFill");
+  const pageIndicator = document.getElementById("pageIndicator");
+  const btnPrev = document.getElementById("btnPrev");
+  const btnNext = document.getElementById("btnNext");
+
+  const BUILD_SENTENCES = [
+    { words: ["fuel", "goes", "in"], answer: "Fuel goes in." },
+    { words: ["fuel", "goes", "out"], answer: "Fuel goes out." },
+    { words: ["the", "seal", "stops", "leaks"], answer: "The seal stops leaks." },
+    { words: ["the", "line", "carries", "fuel"], answer: "The line carries fuel." },
+    { words: ["the", "manifold", "connects", "the", "lines"], answer: "The manifold connects the lines." }
+  ];
+
+  const MATCH_PAIRS = [
+    { en: "Fuel", ru: "топливо" },
+    { en: "Inlet", ru: "вход" },
+    { en: "Outlet", ru: "выход" },
+    { en: "Seal", ru: "уплотнение" },
+    { en: "Body", ru: "корпус" },
+    { en: "Line", ru: "магистраль / линия" }
+  ];
+
+  const EX1_ANS = { q1: "goes", q2: "goes", q3: "stops", q4: "carries", q5: "connects" };
+  const TF_ANS = { 1: "false", 2: "true", 3: "false" };
+
+  const EXAMPLE_HINTS = {
+    inlet: "Highlight: inlet — fuel enters here.",
+    body: "Highlight: body — fuel flows through the body.",
+    outlet: "Highlight: outlet — fuel leaves here.",
+    seal: "Highlight: seal — the seal stops leaks.",
+    line: "Highlight: line — the line carries fuel."
+  };
+
+  PAGE_TITLES.forEach((title, i) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "toc-btn";
+    b.dataset.page = String(i);
+    b.textContent = (i === 0 ? "" : "P" + i + ": ") + title;
+    b.addEventListener("click", () => goToPageIndex(i));
+    li.appendChild(b);
+    tocList.appendChild(li);
+  });
+
+  function maxSpread() { return spreads.length - 1; }
+
+  function currentPageIds() {
+    if (isMobile) return [mobilePage];
+    const s = spreads[spreadIndex];
+    return s.pages;
+  }
+
+  function renderSpread(animate) {
+    const ids = currentPageIds();
+    ids.forEach(markPageVisited);
+
+    const s = isMobile ? { single: true } : spreads[spreadIndex];
+    spreadEl.className = "spread" + (s.single ? " single" : " has-pair");
+    if (animate) {
+      spreadEl.classList.add("flipping-out");
+      setTimeout(() => {
+        spreadEl.innerHTML = ids.map(id => allPages[id]).join("");
+        spreadEl.classList.remove("flipping-out");
+        spreadEl.classList.add("flipping-in");
+        bindPageHandlers();
+        initAllManifoldDiagrams(spreadEl);
+        setTimeout(() => spreadEl.classList.remove("flipping-in"), 450);
+      }, 200);
+    } else {
+      spreadEl.innerHTML = ids.map(id => allPages[id]).join("");
+      bindPageHandlers();
+      initAllManifoldDiagrams(spreadEl);
+    }
+
+    updateUI();
+    localStorage.setItem(STORAGE.page, String(isMobile ? mobilePage : spreadIndex));
+  }
+
+  function updateUI() {
+    const ids = currentPageIds();
+    const lastId = ids[ids.length - 1];
+    const progress = ((lastId + 1) / 12) * 100;
+    progressFill.style.width = progress + "%";
+    pageIndicator.textContent = PAGE_TITLES[lastId] + " (" + (lastId + 1) + "/12)";
+
+    document.querySelectorAll(".toc-btn").forEach(btn => {
+      const p = Number(btn.dataset.page);
+      btn.classList.toggle("active", ids.includes(p));
+    });
+
+    if (isMobile) {
+      btnPrev.disabled = mobilePage <= 0;
+      btnNext.disabled = mobilePage >= 11;
+    } else {
+      btnPrev.disabled = spreadIndex <= 0;
+      btnNext.disabled = spreadIndex >= maxSpread();
+    }
+
+    if (localStorage.getItem(STORAGE.completed) === "1") {
+      const doneBtn = document.getElementById("btnMarkComplete");
+      if (doneBtn) { doneBtn.disabled = true; doneBtn.textContent = "Lesson completed ✓"; }
+    }
+    if (localStorage.getItem(STORAGE.speaking) === "1") {
+      const sf = document.getElementById("speakFeedback");
+      if (sf) sf.classList.add("visible");
+    }
+    updateTocDone();
+  }
+
+  function updateTocDone() {
+    const visited = getVisited();
+    document.querySelectorAll(".toc-btn").forEach(btn => {
+      btn.classList.toggle("done", visited.includes(Number(btn.dataset.page)));
+    });
+  }
+
+  function goToPageIndex(pageIndex) {
+    if (isMobile) {
+      mobilePage = Math.max(0, Math.min(11, pageIndex));
+      renderSpread(true);
+      return;
+    }
+    for (let i = 0; i < spreads.length; i++) {
+      if (spreads[i].pages.includes(pageIndex)) {
+        spreadIndex = i;
+        renderSpread(true);
+        return;
+      }
+    }
+  }
+
+  function next() {
+    if (flipping) return;
+    if (isMobile) {
+      if (mobilePage >= 11) return;
+      mobilePage++;
+    } else {
+      if (spreadIndex >= maxSpread()) return;
+      spreadIndex++;
+    }
+    renderSpread(true);
+  }
+
+  function prev() {
+    if (flipping) return;
+    if (isMobile) {
+      if (mobilePage <= 0) return;
+      mobilePage--;
+    } else {
+      if (spreadIndex <= 0) return;
+      spreadIndex--;
+    }
+    renderSpread(true);
+  }
+
+  function speak(text, btn) {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-GB";
+    const voices = speechSynthesis.getVoices();
+    const gb = voices.find(v => v.lang.startsWith("en-GB")) || voices.find(v => v.lang.startsWith("en"));
+    if (gb) u.voice = gb;
+    if (btn) { btn.disabled = true; u.onend = () => { btn.disabled = false; }; }
+    speechSynthesis.speak(u);
+  }
+
+  function openVocab(key) {
+    const v = VOCAB[key];
+    if (!v) return;
+    document.getElementById("cardTitle").textContent = v.en;
+    document.getElementById("cardIpa").textContent = v.ipa;
+    document.getElementById("cardRu").textContent = v.ru;
+    document.getElementById("cardMeaning").textContent = v.meaning;
+    document.getElementById("cardExample").textContent = v.example;
+    document.getElementById("vocabOverlay").classList.add("open");
+    document.getElementById("cardListen").onclick = () => speak(v.example);
+  }
+
+  let buildIndex = 0;
+  let buildPicked = [];
+
+  function renderBuildExercise() {
+    const area = document.getElementById("buildArea");
+    if (!area) return;
+    const cur = BUILD_SENTENCES[buildIndex];
+    const shuffled = [...cur.words].sort(() => Math.random() - 0.5);
+    buildPicked = [];
+    area.innerHTML = `<p><strong>Sentence ${buildIndex + 1} of 5</strong></p>
+      <div class="sentence-slot" id="buildSlot"></div>
+      <div class="word-bank" id="buildBank">${shuffled.map(w =>
+        `<span class="word-token" data-word="${w}">${w}</span>`).join("")}</div>
+      <button type="button" class="btn" id="buildClear">Clear</button>`;
+    area.querySelectorAll(".word-token").forEach(tok => {
+      tok.addEventListener("click", () => {
+        if (tok.classList.contains("used")) return;
+        tok.classList.add("used");
+        buildPicked.push(tok.dataset.word);
+        const slot = document.getElementById("buildSlot");
+        const span = document.createElement("span");
+        span.className = "word-token";
+        span.textContent = tok.dataset.word;
+        span.addEventListener("click", () => {
+          buildPicked = buildPicked.filter((_, i) => i !== [...slot.children].indexOf(span));
+          span.remove();
+          tok.classList.remove("used");
+        });
+        slot.appendChild(span);
+      });
+    });
+    document.getElementById("buildClear")?.addEventListener("click", () => {
+      buildPicked = [];
+      renderBuildExercise();
+    });
+  }
+
+  function initMatch() {
+    const grid = document.getElementById("matchGrid");
+    if (!grid || grid.dataset.ready) return;
+    grid.dataset.ready = "1";
+    const items = [];
+    MATCH_PAIRS.forEach(p => {
+      items.push({ text: p.en, pair: p.ru, side: "en" });
+      items.push({ text: p.ru, pair: p.en, side: "ru" });
+    });
+    items.sort(() => Math.random() - 0.5);
+    items.forEach(it => {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "match-item";
+      el.textContent = it.text;
+      el.dataset.pair = it.pair;
+      el.dataset.side = it.side;
+      el.addEventListener("click", () => onMatchClick(el));
+      grid.appendChild(el);
+    });
+  }
+
+  function onMatchClick(el) {
+    if (el.classList.contains("matched")) return;
+    if (!matchSelected) {
+      matchSelected = el;
+      el.classList.add("selected");
+      return;
+    }
+    if (matchSelected === el) {
+      el.classList.remove("selected");
+      matchSelected = null;
+      return;
+    }
+    if (matchSelected.dataset.pair === el.textContent && matchSelected.dataset.side !== el.dataset.side) {
+      matchSelected.classList.add("matched");
+      el.classList.add("matched");
+      matchSelected.classList.remove("selected");
+      matchSelected = null;
+      const left = document.querySelectorAll("#matchGrid .match-item:not(.matched)").length;
+      const fb = document.querySelector("[data-fb-ex3]");
+      if (left === 0 && fb) { fb.textContent = "All matched — excellent!"; fb.className = "feedback ok"; }
+    } else {
+      matchSelected.classList.remove("selected");
+      matchSelected = el;
+      el.classList.add("selected");
+    }
+  }
+
+  function bindPageHandlers() {
+    spreadEl.querySelectorAll("[data-vocab]").forEach(chip => {
+      chip.addEventListener("click", () => openVocab(chip.dataset.vocab));
+    });
+
+    document.getElementById("btnShowRule")?.addEventListener("click", () => {
+      document.getElementById("ruleHidden").style.display = "none";
+      document.getElementById("ruleRevealed").classList.add("visible");
+    });
+
+    spreadEl.querySelectorAll(".example-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        spreadEl.querySelectorAll(".example-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const hint = document.getElementById("exampleHint");
+        if (hint) hint.textContent = EXAMPLE_HINTS[btn.dataset.part] || "";
+      });
+    });
+
+    document.querySelector("[data-check-ex1]")?.addEventListener("click", () => {
+      let ok = true;
+      Object.keys(EX1_ANS).forEach(k => {
+        const sel = spreadEl.querySelector(`input[name="${k}"]:checked`);
+        if (!sel || sel.value !== EX1_ANS[k]) ok = false;
+      });
+      const fb = document.querySelector("[data-fb-ex1]");
+      if (fb) {
+        fb.textContent = ok ? "Exercise 1 — all correct!" : "Some answers need review. Check He/She/It + -s.";
+        fb.className = "feedback " + (ok ? "ok" : "err");
+      }
+    });
+
+    renderBuildExercise();
+    document.querySelector("[data-check-ex2]")?.addEventListener("click", () => {
+      const built = buildPicked.join(" ").replace(/\s+/g, " ").trim().toLowerCase();
+      const expected = BUILD_SENTENCES[buildIndex].answer.toLowerCase().replace(/\./g, "");
+      const fb = document.querySelector("[data-fb-ex2]");
+      if (built === expected.replace(/\./g, "")) {
+        if (buildIndex < BUILD_SENTENCES.length - 1) {
+          buildIndex++;
+          if (fb) { fb.textContent = "Correct! Next sentence."; fb.className = "feedback ok"; }
+          renderBuildExercise();
+        } else if (fb) { fb.textContent = "Exercise 2 — all sentences complete!"; fb.className = "feedback ok"; }
+      } else if (fb) { fb.textContent = "Not quite. Try again or tap Clear."; fb.className = "feedback err"; }
+    });
+
+    initMatch();
+
+    spreadEl.querySelectorAll("[data-tf]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const n = btn.dataset.tf;
+        const correct = TF_ANS[n] === btn.dataset.val;
+        const fb = document.querySelector(`[data-tf-fb="${n}"]`);
+        if (fb) {
+          fb.textContent = correct ? "Correct!" : "Try again.";
+          fb.className = "feedback " + (correct ? "ok" : "err");
+        }
+      });
+    });
+
+    document.querySelector("[data-check-gap]")?.addEventListener("click", () => {
+      const g1 = (document.getElementById("gap1")?.value || "").trim().toLowerCase();
+      const g2 = (document.getElementById("gap2")?.value || "").trim().toLowerCase();
+      const ok = g1 === "goes" && g2 === "stops";
+      const fb = document.querySelector("[data-fb-gap]");
+      if (fb) {
+        fb.textContent = ok ? "Gaps correct!" : "Expected: goes · stops";
+        fb.className = "feedback " + (ok ? "ok" : "err");
+      }
+    });
+
+    document.querySelector("[data-check-qc]")?.addEventListener("click", () => {
+      const sel = spreadEl.querySelector('input[name="qc4"]:checked');
+      const fb = document.querySelector("[data-fb-qc]");
+      if (fb) {
+        const ok = sel && sel.value === "goes";
+        fb.textContent = ok ? "Correct: goes" : "Answer: goes (third person -s)";
+        fb.className = "feedback " + (ok ? "ok" : "err");
+      }
+    });
+
+    spreadEl.querySelectorAll("[data-speak]").forEach(btn => {
+      btn.addEventListener("click", () => speak(btn.dataset.speak, btn));
+    });
+
+    document.getElementById("btnSpeakStart")?.addEventListener("click", startSpeakTimer);
+    document.getElementById("btnSpeakDone")?.addEventListener("click", () => {
+      localStorage.setItem(STORAGE.speaking, "1");
+      document.getElementById("speakFeedback")?.classList.add("visible");
+    });
+
+    document.getElementById("btnMarkComplete")?.addEventListener("click", () => {
+      localStorage.setItem(STORAGE.completed, "1");
+      const msg = document.getElementById("completeMsg");
+      if (msg) { msg.textContent = "Lesson saved as complete. Well done!"; msg.className = "feedback ok"; }
+      updateUI();
+    });
+  }
+
+  function startSpeakTimer() {
+    const timerEl = document.getElementById("speakTimer");
+    if (!timerEl) return;
+    let left = speakSeconds;
+    timerEl.hidden = false;
+    timerEl.textContent = "0:" + String(left).padStart(2, "0");
+    clearInterval(speakInterval);
+    speakInterval = setInterval(() => {
+      left--;
+      timerEl.textContent = "0:" + String(left).padStart(2, "0");
+      if (left <= 0) clearInterval(speakInterval);
+    }, 1000);
+  }
+
+  document.getElementById("closeVocab").addEventListener("click", () => {
+    document.getElementById("vocabOverlay").classList.remove("open");
+  });
+  document.getElementById("vocabOverlay").addEventListener("click", e => {
+    if (e.target.id === "vocabOverlay") document.getElementById("vocabOverlay").classList.remove("open");
+  });
+
+  btnPrev.addEventListener("click", prev);
+  btnNext.addEventListener("click", next);
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
+
+  window.matchMedia("(max-width: 767px)").addEventListener("change", e => {
+    isMobile = e.matches;
+    renderSpread(false);
+  });
+
+  const saved = localStorage.getItem(STORAGE.page);
+  if (saved !== null) {
+    const n = parseInt(saved, 10);
+    if (isMobile && n >= 0 && n <= 11) mobilePage = n;
+    else if (!isMobile && n >= 0 && n < spreads.length) spreadIndex = n;
+    else if (!isMobile && n >= 0 && n <= 11) {
+      for (let i = 0; i < spreads.length; i++) {
+        if (spreads[i].pages.includes(n)) { spreadIndex = i; break; }
+      }
+    }
+  }
+
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+  }
+
+  renderSpread(false);
+})();
+  </script>
+</body>
+</html>

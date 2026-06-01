@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Manifold English Starter Book — Print</title>
+  <style>
+    @page { size: A4; margin: 14mm; }
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --blue: #1e40af;
+      --green: #16a34a;
+      --text: #334155;
+      --border: #bfdbfe;
+      --yellow: #fef3c7;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Inter, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--text);
+      background: #f8fafc;
+    }
+    h1, h2, h3 { color: var(--blue); line-height: 1.3; }
+    h1 { font-size: 28px; margin: 0 0 0.5rem; }
+    h2 { font-size: 22px; margin: 0 0 0.65rem; border-bottom: 2px solid var(--border); padding-bottom: 0.35rem; }
+    h3 { font-size: 18px; margin: 0.75rem 0 0.35rem; }
+    .ru { color: #475569; }
+    .ipa { color: #64748b; }
+    .no-print {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: center; gap: 0.75rem;
+      padding: 0.75rem; background: #1e40af; color: #fff;
+    }
+    .no-print button {
+      padding: 0.6rem 1.25rem; border: none; border-radius: 0.5rem;
+      background: #fff; color: var(--blue); font: inherit;
+      font-weight: 700; cursor: pointer;
+    }
+    .book { max-width: 210mm; margin: 0 auto; padding: 1rem; }
+    .page {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14mm;
+      margin-bottom: 1rem;
+      min-height: 250mm;
+    }
+    @media print {
+      body { background: white; }
+      .no-print { display: none !important; }
+      .book { max-width: none; padding: 0; }
+      .page {
+        border: none; border-radius: 0; margin: 0;
+        page-break-after: always;
+        min-height: auto;
+      }
+      .page:last-child { page-break-after: auto; }
+    }
+    .cover {
+      display: flex; flex-direction: column; justify-content: center;
+      text-align: center; min-height: 240mm;
+    }
+    .badge {
+      display: inline-block; padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border); border-radius: 999px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1rem;
+    }
+    .micro-goal {
+      margin-top: 1.5rem; padding: 1rem; background: var(--yellow);
+      border: 1px solid #fde68a; border-radius: 8px; text-align: left;
+    }
+    .diagram {
+      border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 0.5rem; margin: 0.75rem 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      max-height: 240px; overflow: hidden; background: #fff;
+    }
+    .diagram img.manifold-photo {
+      display: none;
+      max-width: 100%; width: auto; height: auto;
+      max-height: 200px; object-fit: contain; object-position: center;
+      margin: 0 auto;
+    }
+    .diagram img.manifold-photo.is-loaded { display: block; }
+    @media print {
+      .diagram { max-height: 220px; page-break-inside: avoid; }
+      .diagram img.manifold-photo.is-loaded { max-height: 180px; }
+    }
+    .diagram-placeholder {
+      display: none; min-height: 140px; flex-direction: column;
+      align-items: center; justify-content: center; padding: 1.25rem;
+      background: #f1f5f9; border: 2px dashed var(--border);
+      color: var(--blue); text-align: center; font-size: 0.95rem; line-height: 1.5;
+      max-width: 100%;
+    }
+    .diagram-placeholder.visible { display: flex; }
+    .diagram-placeholder strong { margin-bottom: 0.4rem; }
+    .diagram-placeholder code {
+      font-size: 0.85rem; background: #e2e8f0; padding: 0.15rem 0.4rem;
+      border-radius: 0.25rem; word-break: break-all;
+    }
+    .flow-labels {
+      display: flex; justify-content: space-around; font-weight: 700;
+      color: var(--green); margin-top: 0.5rem;
+    }
+    table.vocab {
+      width: 100%; border-collapse: collapse; margin-top: 0.5rem;
+    }
+    table.vocab th, table.vocab td {
+      border: 1px solid #e2e8f0; padding: 0.5rem 0.65rem; text-align: left;
+    }
+    table.vocab th { background: #dbeafe; color: var(--blue); font-size: 14px; }
+    .rule-box {
+      background: var(--yellow); border: 1px solid #fde68a;
+      border-radius: 8px; padding: 1rem; margin: 0.75rem 0;
+    }
+    .formula {
+      font-weight: 700; font-size: 17px; margin: 0.5rem 0;
+      padding-left: 0.75rem; border-left: 4px solid var(--blue);
+    }
+    .examples-list li { margin: 0.35rem 0; }
+    .write-line {
+      border-bottom: 1px solid #94a3b8; min-height: 1.75rem; margin: 0.5rem 0;
+    }
+    .exercise { margin: 1rem 0; }
+    .exercise ol { margin: 0.35rem 0; padding-left: 1.25rem; }
+    .match-table td { width: 50%; }
+    .answer-blank {
+      display: inline-block; min-width: 80px;
+      border-bottom: 1px solid #64748b;
+    }
+    .sound-box {
+      background: #f0f9ff; border: 1px solid #bae6fd;
+      border-radius: 8px; padding: 1rem; margin-top: 0.5rem;
+    }
+    .sound-big { font-size: 26px; font-weight: 700; color: var(--blue); }
+    .answer-key { background: #f8fafc; }
+    .answer-key h2 { border-color: #86efac; color: #166534; }
+    .key-section { margin-bottom: 1rem; }
+    .page-num { text-align: right; font-size: 12px; color: #94a3b8; margin-top: auto; }
+    ol.steps { padding-left: 1.25rem; }
+    ol.steps li { margin: 0.3rem 0; }
+    .teaser {
+      margin-top: 1rem; padding: 0.75rem; border: 1px dashed var(--border);
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="no-print">
+    <button type="button" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <div class="book">
+
+    <!-- COVER -->
+    <section class="page cover">
+      <span class="badge">Lesson 1</span>
+      <h1>Fuel Manifold English Starter Book</h1>
+      <p style="font-size:18px">Visual Technical English for Beginners</p>
+      <p class="ru" style="font-size:17px">Визуальный технический английский с нуля</p>
+      <p style="margin-top:2rem;font-size:20px;font-weight:700;color:var(--blue)">Fuel Manifold + Present Simple</p>
+      <div class="micro-goal">
+        <strong>Today’s micro-goal:</strong>
+        <ul>
+          <li>Learn 6 words.</li>
+          <li>Understand 1 rule.</li>
+          <li>Say 3 short technical sentences.</li>
+        </ul>
+      </div>
+      <p class="page-num">Cover</p>
+    </section>
+
+    <!-- HOW TO USE -->
+    <section class="page">
+      <h2>How to use this book</h2>
+      <ol class="steps">
+        <li>Look at the picture.</li>
+        <li>Click or read the word.</li>
+        <li>Listen and repeat.</li>
+        <li>Read the rule.</li>
+        <li>Build short sentences.</li>
+        <li>Check yourself.</li>
+        <li>Say 3 sentences aloud.</li>
+      </ol>
+      <p class="ru"><strong>Russian:</strong></p>
+      <ol class="steps ru">
+        <li>Посмотрите на картинку.</li>
+        <li>Прочитайте слово.</li>
+        <li>Послушайте и повторите.</li>
+        <li>Разберите правило.</li>
+        <li>Соберите короткие предложения.</li>
+        <li>Проверьте себя.</li>
+        <li>Скажите 3 фразы вслух.</li>
+      </ol>
+      <p class="page-num">How to use</p>
+    </section>
+
+    <!-- LOOK -->
+    <section class="page">
+      <h2>Page 1 — Look at the component</h2>
+      <div class="diagram" data-manifold-diagram>
+        <img class="manifold-photo" alt="Fuel manifold cutaway illustration" decoding="async">
+        <div class="diagram-placeholder" data-placeholder hidden>
+          <strong>Fuel Manifold illustration not found.</strong>
+          <span>Please place <code>fuel-manifold-cutaway-master.png</code> into <code>public/images/</code>.</span>
+        </div>
+      </div>
+      <p><strong>This is a fuel manifold.</strong><br>
+      Fuel goes in.<br>
+      Fuel goes through the body.<br>
+      Fuel goes out.</p>
+      <p class="ru">Это топливный коллектор. Топливо входит. Топливо проходит через корпус. Топливо выходит.</p>
+      <div class="flow-labels">
+        <span>Fuel in →</span>
+        <span>Through →</span>
+        <span>Fuel out</span>
+      </div>
+      <p class="page-num">Page 1 — Look</p>
+    </section>
+
+    <!-- VOCABULARY -->
+    <section class="page">
+      <h2>Page 2 — Vocabulary</h2>
+      <table class="vocab">
+        <thead>
+          <tr><th>English</th><th>IPA</th><th>Russian</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Fuel</strong></td><td class="ipa">/ˈfjuːəl/</td><td>топливо</td><td>Fuel goes in.</td></tr>
+          <tr><td><strong>Inlet</strong></td><td class="ipa">/ˈɪnlet/</td><td>вход</td><td>Fuel enters here.</td></tr>
+          <tr><td><strong>Outlet</strong></td><td class="ipa">/ˈaʊtlet/</td><td>выход</td><td>Fuel goes out.</td></tr>
+          <tr><td><strong>Seal</strong></td><td class="ipa">/siːl/</td><td>уплотнение</td><td>The seal stops leaks.</td></tr>
+          <tr><td><strong>Body</strong></td><td class="ipa">/ˈbɒdi/</td><td>корпус</td><td>The body holds the fuel path.</td></tr>
+          <tr><td><strong>Line</strong></td><td class="ipa">/laɪn/</td><td>магистраль / линия</td><td>The line carries fuel.</td></tr>
+          <tr><td><strong>Manifold</strong> (bonus)</td><td class="ipa">/ˈmænɪfəʊld/</td><td>коллектор</td><td>The manifold connects the lines.</td></tr>
+        </tbody>
+      </table>
+      <p class="page-num">Page 2 — Vocabulary</p>
+    </section>
+
+    <!-- RULE -->
+    <section class="page">
+      <h2>Page 3 — Rule Card</h2>
+      <p class="ru">Present Simple: факты и функции</p>
+      <div class="rule-box">
+        <p><strong>We use Present Simple to say what a part does.</strong></p>
+        <p class="ru">Используем Present Simple, чтобы сказать, что делает деталь.</p>
+        <div class="formula">
+          I / You / We / They + verb<br>
+          He / She / It + verb + <strong>-s</strong>
+        </div>
+        <p><strong>Visual focus:</strong> it → verb + -s</p>
+      </div>
+      <h3>Examples</h3>
+      <ul class="examples-list">
+        <li>Fuel goes in. <span class="ru">— Топливо входит.</span></li>
+        <li>Fuel goes out. <span class="ru">— Топливо выходит.</span></li>
+        <li>The seal stops leaks. <span class="ru">— Уплотнение предотвращает утечки.</span></li>
+        <li>The line carries fuel. <span class="ru">— Линия проводит топливо.</span></li>
+        <li>The manifold connects the lines. <span class="ru">— Коллектор соединяет линии.</span></li>
+      </ul>
+      <p class="page-num">Page 3 — Rule</p>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section class="page">
+      <h2>Page 4 — Visual Examples</h2>
+      <div class="diagram" data-manifold-diagram>
+        <img class="manifold-photo" alt="Fuel manifold cutaway illustration" decoding="async">
+        <div class="diagram-placeholder" data-placeholder hidden>
+          <strong>Fuel Manifold illustration not found.</strong>
+          <span>Please place <code>fuel-manifold-cutaway-master.png</code> into <code>public/images/</code>.</span>
+        </div>
+      </div>
+      <ol class="examples-list">
+        <li><strong>Fuel goes in.</strong> Highlight: <em>inlet</em></li>
+        <li><strong>Fuel goes through the body.</strong> Highlight: <em>body</em>, flow path</li>
+        <li><strong>Fuel goes out.</strong> Highlight: <em>outlet</em></li>
+        <li><strong>The seal stops leaks.</strong> Highlight: <em>seal</em></li>
+        <li><strong>The line carries fuel.</strong> Highlight: <em>line</em></li>
+      </ol>
+      <p class="page-num">Page 4 — Examples</p>
+    </section>
+
+    <!-- WORKBOOK -->
+    <section class="page">
+      <h2>Page 5 — Workbook</h2>
+      <div class="exercise">
+        <h3>Exercise 1 — Choose the correct form</h3>
+        <ol>
+          <li>Fuel go / goes in. Circle: <span class="answer-blank"></span></li>
+          <li>Fuel go / goes out. Circle: <span class="answer-blank"></span></li>
+          <li>The seal stop / stops leaks. Circle: <span class="answer-blank"></span></li>
+          <li>The line carry / carries fuel. Circle: <span class="answer-blank"></span></li>
+          <li>The manifold connect / connects the lines. Circle: <span class="answer-blank"></span></li>
+        </ol>
+      </div>
+      <div class="exercise">
+        <h3>Exercise 2 — Build the sentence (write in order)</h3>
+        <p>1. fuel / goes / in → <span class="write-line"></span></p>
+        <p>2. fuel / goes / out → <span class="write-line"></span></p>
+        <p>3. the seal / stops / leaks → <span class="write-line"></span></p>
+        <p>4. the line / carries / fuel → <span class="write-line"></span></p>
+        <p>5. the manifold / connects / the lines → <span class="write-line"></span></p>
+      </div>
+      <p class="page-num">Page 5 — Workbook (1)</p>
+    </section>
+
+    <section class="page">
+      <h2>Page 5 — Workbook (continued)</h2>
+      <div class="exercise">
+        <h3>Exercise 3 — Match</h3>
+        <table class="vocab match-table">
+          <tr><td>Fuel</td><td>топливо — draw line →</td></tr>
+          <tr><td>Inlet</td><td>вход</td></tr>
+          <tr><td>Outlet</td><td>выход</td></tr>
+          <tr><td>Seal</td><td>уплотнение</td></tr>
+          <tr><td>Body</td><td>корпус</td></tr>
+          <tr><td>Line</td><td>магистраль / линия</td></tr>
+        </table>
+      </div>
+      <div class="exercise">
+        <h3>Exercise 4 — True or False (write T or F)</h3>
+        <ol>
+          <li>Fuel go in. <span class="answer-blank"></span></li>
+          <li>The seal stops leaks. <span class="answer-blank"></span></li>
+          <li>The line carry fuel. <span class="answer-blank"></span></li>
+        </ol>
+      </div>
+      <div class="exercise">
+        <h3>Exercise 5 — Fill the gap</h3>
+        <p>1. Fuel ______________ in.</p>
+        <p>2. The seal ______________ leaks.</p>
+      </div>
+      <p class="page-num">Page 5 — Workbook (2)</p>
+    </section>
+
+    <!-- QUICK CHECK -->
+    <section class="page">
+      <h2>Page 6 — Quick Check</h2>
+      <ol>
+        <li>What goes in?<br><span class="write-line"></span></li>
+        <li>Where does fuel enter?<br><span class="write-line"></span></li>
+        <li>What stops leaks?<br><span class="write-line"></span></li>
+        <li>Fuel go / goes in? Circle: <span class="answer-blank"></span></li>
+        <li>Say one sentence with “The seal”. Write or speak:<br><span class="write-line"></span></li>
+      </ol>
+      <p class="page-num">Page 6 — Quick Check</p>
+    </section>
+
+    <!-- SPEAKING -->
+    <section class="page">
+      <h2>Page 7 — Speaking</h2>
+      <p><strong>Say 3 sentences aloud:</strong></p>
+      <ol>
+        <li>Fuel goes in.</li>
+        <li>Fuel goes out.</li>
+        <li>The seal stops leaks.</li>
+      </ol>
+      <p style="margin-top:1rem"><strong>Stronger version:</strong></p>
+      <p>Fuel goes in. Fuel goes through the body. Fuel goes out. The seal stops leaks.</p>
+      <p style="margin-top:1rem"><em>Teacher / self-study: practise for 20 seconds without stopping.</em></p>
+      <p class="page-num">Page 7 — Speaking</p>
+    </section>
+
+    <!-- SOUND -->
+    <section class="page">
+      <h2>Page 8 — British Sound Focus: /θ/</h2>
+      <div class="sound-box">
+        <div class="sound-big">through</div>
+        <p class="ipa">/θruː/ — через / сквозь</p>
+        <p><strong>How to say it:</strong></p>
+        <ul>
+          <li>Put the tongue lightly between the teeth.</li>
+          <li>Blow air gently.</li>
+          <li>Do not say /s/ or /t/.</li>
+        </ul>
+        <p><strong>Practice:</strong> through · through the body · through the inlet · Fuel goes through the body.</p>
+        <p class="ru">Звук /θ/ произносится с языком между зубами. Воздух проходит мягко. Не заменяйте его на /с/ или /т/.</p>
+      </div>
+      <p class="page-num">Page 8 — Sound /θ/</p>
+    </section>
+
+    <!-- TEACHER -->
+    <section class="page">
+      <h2>Page 9 — Teacher Notes</h2>
+      <p><strong>Lesson objective:</strong> Students learn 6 words and say 3 Present Simple sentences.</p>
+      <p><strong>10-minute flow:</strong></p>
+      <ol>
+        <li>Look at the object — 1 min</li>
+        <li>Learn 6 words — 3 min</li>
+        <li>Open Rule Card — 2 min</li>
+        <li>Do Workbook — 3 min</li>
+        <li>Say 3 sentences — 1 min</li>
+      </ol>
+      <p><strong>Teacher questions:</strong></p>
+      <ul>
+        <li>What does fuel do?</li>
+        <li>What does the seal do?</li>
+        <li>Where does fuel enter?</li>
+        <li>Where does fuel go out?</li>
+      </ul>
+      <p><strong>Expected answers:</strong> Fuel goes in. Fuel goes out. The seal stops leaks. Fuel enters through the inlet.</p>
+      <p class="page-num">Page 9 — Teacher Notes</p>
+    </section>
+
+    <!-- DONE -->
+    <section class="page">
+      <h2>Page 10 — Review / Done</h2>
+      <p><strong>Lesson complete.</strong></p>
+      <p>Now you can:</p>
+      <ul>
+        <li>name 6 parts or words;</li>
+        <li>use Present Simple for functions;</li>
+        <li>say 3 technical sentences;</li>
+        <li>pronounce through /θruː/.</li>
+      </ul>
+      <p><strong>You can now say:</strong></p>
+      <ul>
+        <li>Fuel goes in.</li>
+        <li>Fuel goes through the body.</li>
+        <li>The seal stops leaks.</li>
+      </ul>
+      <p><strong>Final mini-task</strong> — write or say 3 sentences:</p>
+      <p>1. <span class="write-line"></span></p>
+      <p>2. <span class="write-line"></span></p>
+      <p>3. <span class="write-line"></span></p>
+      <div class="teaser">
+        <strong>Next lesson:</strong> Fuel Pump Assembly /ˈfjuːəl pʌmp əˈsembli/<br>
+        <span class="ru">Узел топливного насоса</span><br>
+        <em>Coming next: How fuel moves from the tank to the line.</em>
+      </div>
+      <p class="page-num">Page 10 — Done</p>
+    </section>
+
+    <!-- ANSWER KEY -->
+    <section class="page answer-key">
+      <h2>Answer Key</h2>
+      <div class="key-section">
+        <h3>Exercise 1</h3>
+        <ol>
+          <li>goes</li>
+          <li>goes</li>
+          <li>stops</li>
+          <li>carries</li>
+          <li>connects</li>
+        </ol>
+      </div>
+      <div class="key-section">
+        <h3>Exercise 2</h3>
+        <ol>
+          <li>Fuel goes in.</li>
+          <li>Fuel goes out.</li>
+          <li>The seal stops leaks.</li>
+          <li>The line carries fuel.</li>
+          <li>The manifold connects the lines.</li>
+        </ol>
+      </div>
+      <div class="key-section">
+        <h3>Exercise 3 — Match</h3>
+        <p>Fuel → топливо · Inlet → вход · Outlet → выход · Seal → уплотнение · Body → корпус · Line → магистраль / линия</p>
+      </div>
+      <div class="key-section">
+        <h3>Exercise 4 — True or False</h3>
+        <ol>
+          <li>False</li>
+          <li>True</li>
+          <li>False</li>
+        </ol>
+      </div>
+      <div class="key-section">
+        <h3>Exercise 5 — Fill the gap</h3>
+        <p>1. goes · 2. stops</p>
+      </div>
+      <div class="key-section">
+        <h3>Quick Check</h3>
+        <ol>
+          <li>Fuel.</li>
+          <li>Through the inlet.</li>
+          <li>The seal.</li>
+          <li>goes</li>
+          <li>The seal stops leaks.</li>
+        </ol>
+      </div>
+      <p class="page-num">Answer Key</p>
+    </section>
+
+  </div>
+  <script>
+    (function () {
+      var PRIMARY = "public/images/fuel-manifold-cutaway-master.png";
+      var FALLBACK = "images/fuel-manifold-cutaway-master.png";
+
+      function loadDiagram(wrap) {
+        if (!wrap || wrap.dataset.manifoldReady) return;
+        var img = wrap.querySelector(".manifold-photo");
+        var ph = wrap.querySelector("[data-placeholder]");
+        if (!img) return;
+
+        function showLoaded(path) {
+          img.src = path;
+          img.classList.add("is-loaded");
+          if (ph) { ph.hidden = true; ph.classList.remove("visible"); }
+          wrap.dataset.manifoldReady = "1";
+        }
+
+        function showMissing() {
+          img.classList.remove("is-loaded");
+          img.removeAttribute("src");
+          if (ph) { ph.hidden = false; ph.classList.add("visible"); }
+        }
+
+        function tryPath(path, useFallback) {
+          var probe = new Image();
+          probe.onload = function () { showLoaded(path); };
+          probe.onerror = function () {
+            if (useFallback) tryPath(FALLBACK, false);
+            else showMissing();
+          };
+          probe.src = path;
+        }
+
+        tryPath(PRIMARY, true);
+      }
+
+      document.querySelectorAll("[data-manifold-diagram]").forEach(loadDiagram);
+    })();
+  </script>
+</body>
+</html>
